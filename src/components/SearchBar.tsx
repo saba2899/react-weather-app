@@ -23,6 +23,7 @@ interface WeatherData {
 const SearchInput = () => {
     const [query, setQuery] = useState<string>('');
     const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+    const [error, setError] = useState<string>('');
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(event.target.value);
@@ -37,9 +38,11 @@ const SearchInput = () => {
                 },
             });
             setWeatherData(response.data);
-            console.log(response.data);
+            setError(''); // clear error
         } catch (error) {
             console.log('Error:', error);
+            setWeatherData(null); // clear data
+            setError('City not found or invalid request.'); // set error message
         }
     };
 
@@ -70,6 +73,8 @@ const SearchInput = () => {
                 onKeyDown={handleKeyDown}
             />
             <button onClick={handleSearch}>Search</button>
+
+            {error && <p className="error-message">{error}</p>}
 
             {weatherData && (
                 <div className="weather-card">
